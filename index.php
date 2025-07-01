@@ -113,17 +113,22 @@ if (file_exists($dataFile)) {
                     <article>
                         <h3>スピーカー</h3>
                         <div class="speaker">
-                            <img src="images/speaker1.png" alt="" class="image"/>
+                        <!-- TODO : プロフィール画像を受け取ったら更新する -->
+                            <img src="images/speaker1.jpeg" alt="" class="image"/>
                             <div class="inner">
-                                <h4>1人目: 未定</h4>
-                                <p>1人目のプロフィール</p>
+                                <h4>いろふさん</h4>
+                                <p>大阪を中心に仕事をしている、ふつのプログラマです。<br>
+                                    Gitの使い方や、実践的な運用方法についてお話しします。<br>
+                                    趣味は旅行と料理で、最近はアウトドアにもハマっています。</p>
                             </div>
                         </div>
                         <div class="speaker">
                             <img src="images/speaker2.png" alt="" class="image"/>
                             <div class="inner">
-                                <h4>2人目: 未定</h4>
-                                <p>2人目のプロフィール</p>
+                                <h4>うらがみさん</h4>
+                                <p>東京でフリーランスのエンジニアをしています。<br>
+                                    Gitのブランチ戦略や、チーム開発におけるGitの活用法についてお話しします。<br>
+                                    趣味は映画鑑賞と音楽で、特にジャズが好きです。</p>
                             </div>
                         </div>
                     </article>
