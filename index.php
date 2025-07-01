@@ -1,0 +1,255 @@
+<?php
+// タイムゾーン設定
+date_default_timezone_set('Asia/Tokyo');
+
+// 投稿データ保存ファイル
+$dataFile = __DIR__ . '/data.txt';
+
+// POSTリクエストがあった場合の処理
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['message'])) {
+    // 名前とメッセージを取得
+    $name = isset($_POST['name']) ? trim($_POST['name']) : '';
+    $message = isset($_POST['message']) ? trim($_POST['message']) : '';
+
+    // 名前が空の場合は「名無しさん」とする
+    if ($name === '') {
+        $name = '名無しさん';
+    }
+
+    // メッセージが空でなければ保存処理
+    if ($message !== '') {
+        $postTime = date("Y-m-d H:i:s");
+        // 保存するデータ（タブ区切り）
+        $newData = $name . "\t" . $message . "\t" . $postTime . "\n";
+
+        // ファイルに追記（排他ロック）
+        file_put_contents($dataFile, $newData, FILE_APPEND | LOCK_EX);
+    }
+
+    // 二重投稿防止のためリダイレクト
+    header('Location: ' . $_SERVER['SCRIPT_NAME']);
+    exit;
+}
+
+// 投稿データを読み込む
+$posts = [];
+if (file_exists($dataFile)) {
+    $lines = file($dataFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    $lines = array_reverse($lines); // 新しい投稿が上に来るように配列を逆順にする
+    foreach ($lines as $line) {
+        // タブで分割して投稿データを連想配列にする
+        list($name, $message, $postTime) = explode("\t", $line, 3);
+        $posts[] = [
+            'name' => htmlspecialchars($name, ENT_QUOTES, 'UTF-8'),
+            'message' => nl2br(htmlspecialchars($message, ENT_QUOTES, 'UTF-8')),
+            'time' => $postTime
+        ];
+    }
+}
+?>
+<!DOCTYPE HTML>
+<!--
+	Read Only by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+<head>
+    <title>Ichiyasa Git User Group</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="stylesheet" href="assets/css/main.css"/>
+</head>
+<body>
+
+<!-- Header -->
+<section id="header">
+    <header>
+        <span class="image avatar"><img src="images/avatar.png" alt=""/></span>
+        <h1 id="logo"><a href="#">Ichiyasa Git User Group</a></h1>
+    </header>
+    <nav id="nav">
+        <ul>
+            <li><a href="#one" class="active">Japan Git User Groupとは</a></li>
+            <li><a href="#two">イベントのお知らせ</a></li>
+            <li><a href="#three">過去のイベント</a></li>
+            <li><a href="#four">掲示板</a></li>
+        </ul>
+    </nav>
+</section>
+
+<!-- Wrapper -->
+<div id="wrapper">
+
+    <!-- Main -->
+    <div id="main">
+
+        <!-- One -->
+        <section id="one">
+            <div class="container">
+                <p style="text-align: right;">
+                    現在時刻: <?php echo date("Y年m月d日 H:i:s"); ?>
+                </p>
+                <header class="major">
+                    <h2>Ichiyasa Git User Group</h2>
+                </header>
+                <p>Gitを利用する人々のコミュニティです。</p>
+                <p>勉強会を企画・運営し、情報交換の場を提供しています。</p>
+                <p>このコミュニティーは、運営を円滑に行うことを目的に活動しています</p>
+            </div>
+        </section>
+
+        <!-- Two -->
+        <section id="two">
+            <div class="container">
+                <h2>第２回Git勉強会</h2>
+                <div class="features">
+                    <p>第２回Git勉強会を開催します。みなさま、是非ご参加ください！</p>
+                    <article>
+                        <h3>イベント日時・場所</h3>
+                        <p>3月23日 19:00開始</p>
+                        <p>株式会社〇〇 イベントセミナー会場</p>
+                    </article>
+                    <article>
+                        <h3>スピーカー</h3>
+                        <div class="speaker">
+                            <img src="images/speaker1.png" alt="" class="image"/>
+                            <div class="inner">
+                                <h4>1人目: 未定</h4>
+                                <p>1人目のプロフィール</p>
+                            </div>
+                        </div>
+                        <div class="speaker">
+                            <img src="images/speaker2.png" alt="" class="image"/>
+                            <div class="inner">
+                                <h4>2人目: 未定</h4>
+                                <p>2人目のプロフィール</p>
+                            </div>
+                        </div>
+                    </article>
+                    <article>
+                        <h3>タイムテーブル</h3>
+                        <div class="table-wrapper">
+                            <table class="alt">
+                                <thead>
+                                <tr>
+                                    <th>時間</th>
+                                    <th>内容</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>19:00〜19:05</td>
+                                    <td>オープニング</td>
+                                </tr>
+                                <tr>
+                                    <td>19:05〜19:50</td>
+                                    <td>セッション1: 未定</td>
+                                </tr>
+                                <tr>
+                                    <td>19:50〜20:00</td>
+                                    <td>休憩</td>
+                                </tr>
+                                <tr>
+                                    <td>20:00〜20:45</td>
+                                    <td>セッション2: 未定</td>
+                                </tr>
+                                <tr>
+                                    <td>20:45〜21:00</td>
+                                    <td>クロージング</td>
+                                </tr>
+                                <tr>
+                                    <td>21:00〜</td>
+                                    <td>懇親会</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Three -->
+        <section id="three">
+            <div class="container">
+                <h2>去年までのイベント</h2>
+                <h3>第１回Git勉強会</h3>
+                <div class="features">
+                    <article>
+                        <h4>Gitはじめの一歩 (@ihcomegaさん)</h4>
+                        <iframe width="560" height="315" src="https://www.youtube.com/embed/RZizY7tGPn8?rel=0"
+                                frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                    </article>
+                    <article>
+                        <h4>Git実践入門 (@syobochimさん)</h4>
+                        <iframe width="560" height="315" src="https://www.youtube.com/embed/LocX863UA_w?rel=0"
+                                frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Four -->
+        <section id="four">
+            <div class="container">
+                <h2>簡易掲示板</h2>
+                <p>ご意見・ご感想など、ご自由にお書き込みください。</p>
+
+                <!-- 投稿フォーム -->
+                <form method="post" action="#four">
+                    <div class="row uniform 50%">
+                        <div class="6u 12u(xsmall)"><input type="text" name="name" id="name" placeholder="お名前 (未入力の場合は「名無しさん」)" /></div>
+                    </div>
+                    <div class="row uniform 50%">
+                        <div class="12u"><textarea name="message" id="message" placeholder="メッセージを入力してください" rows="4" required></textarea></div>
+                    </div>
+                    <br>
+                    <ul class="actions">
+                        <li><input type="submit" value="投稿する" class="special" /></li>
+                    </ul>
+                </form>
+
+                <hr />
+
+                <!-- 投稿一覧 -->
+                <h3>投稿一覧</h3>
+                <?php if (empty($posts)): ?>
+                    <p>まだ投稿はありません。</p>
+                <?php else: ?>
+                    <?php foreach ($posts as $post): ?>
+                        <article class="box">
+                            <p>
+                                <strong><?php echo $post['name']; ?></strong>
+                                <small>(<?php echo $post['time']; ?>)</small>
+                            </p>
+                            <p style="margin-bottom: 0;"><?php echo $post['message']; ?></p>
+                        </article>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <section id="footer">
+        <div class="container">
+            <ul class="copyright">
+                <li>&copy; Ichiyasa Git User Group <?php echo date('Y'); ?>. All rights reserved.</li>
+                <li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+            </ul>
+        </div>
+    </section>
+
+</div>
+
+<!-- Scripts -->
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/jquery.scrollzer.min.js"></script>
+<script src="assets/js/jquery.scrolly.min.js"></script>
+<script src="assets/js/skel.min.js"></script>
+<script src="assets/js/util.js"></script>
+<script src="assets/js/main.js"></script>
+
+</body>
+</html>
